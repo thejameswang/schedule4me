@@ -1,16 +1,15 @@
-import util from 'util'
-import path from 'path'
-import fs from 'fs'
-import mongoose from 'mongoose'
-import Bot from 'slackbots'
+'use strict';
 
-let schedule4meBot = function Constructor(settings) {
-  this.settings = settings;
-  this.settings.name = this.settings.name || 'schedule4meBot';
-  this.user = null;
-  this.db = null;
-}
+var schedule4meBot = require('./scheduleBot');
 
-util.inherits(schedule5meBot, Bot);
+var token = process.env.BOT_API_KEY;
+var dbPath = process.env.BOT_DB_PATH;
+var name = process.env.BOT_NAME;
 
-module.exports = schedule4meBot;
+var norrisbot = new NorrisBot({
+    token: token,
+    dbPath: dbPath,
+    name: name
+});
+
+norrisbot.run();

@@ -1,9 +1,7 @@
 // Importing needed npm packages
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import oauth from './app/oauth'
 
 //initializes express
 var app = express();

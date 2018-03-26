@@ -1,15 +1,41 @@
 'use strict';
 
-var schedule4meBot = require('./scheduleBot');
+let SlackBot = require('slackbots');
 
-var token = process.env.BOT_API_KEY;
-var dbPath = process.env.BOT_DB_PATH;
-var name = process.env.BOT_NAME;
+export default function bot() {
 
-var norrisbot = new NorrisBot({
-    token: token,
-    dbPath: dbPath,
-    name: name
-});
+    let bot = new SlackBot({
+        token: process.env.SLACKBOT_OAUTH_TOKEN,
+        name: 'My Bot'
+    });
 
-norrisbot.run();
+    // bot.run();
+
+    bot.on('start', function() {
+        // more information about additional params https://api.slack.com/methods/chat.postMessage
+            var params = {
+                icon_emoji: ':cat:'
+            };
+
+            // define channel, where bot exist. You can adjust it there https://my.slack.com/services
+            bot.postMessageToChannel('general', 'meow!', params);
+
+            // define existing username instead of 'user_name'
+            bot.postMessageToUser('user_name', 'meow!', params);
+
+            // If you add a 'slackbot' property,
+            // you will post to another user's slackbot channel instead of a direct message
+            bot.postMessageToUser('user_name', 'meow!', { 'slackbot': true, icon_emoji: ':cat:' });
+
+            // define private group instead of 'private_group', where bot exist
+            bot.postMessageToGroup('private_group', 'meow!', params);
+    });
+
+    /**
+     * @param {object} data
+     */
+    bot.on('message', function(data) {
+        // all ingoing events https://api.slack.com/rtm
+        console.log(data);
+    });
+}

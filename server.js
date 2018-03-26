@@ -2,6 +2,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import oauth from './app/oauth';
+import bot from './app/bot';
 
 //initializes express
 var app = express();
@@ -15,6 +17,7 @@ mongoose.connect(process.env.MONGODB_URI);
 
 //initializes database routes, connection checks, and connection functions
 oauth(app);
+bot();
 
 //Checks for mongo database environmental variables
 if (!process.env.MONGODB_URI) {

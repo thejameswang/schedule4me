@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI);
 //initializes database routes, connection checks, and connection functions
 oauth(app);
 bot();
-trainer(app);
+// trainer(app);
 
 
 //Checks for mongo database environmental variables

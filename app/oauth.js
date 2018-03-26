@@ -23,7 +23,8 @@ export default function oauth(app) {
       }
       // Authorize a client with the loaded credentials, then call the
       // Google Calendar API.
-      authorize(JSON.parse(content), listEvents);
+      authorize(JSON.parse(content), addAllDayEvent);
+
     });
 
     /**
@@ -134,4 +135,76 @@ export default function oauth(app) {
         }
       });
     }
+
+    /**
+ * Lists the next 10 events on the user's primary calendar.
+ *
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
+function listEvents(auth) {
+  var calendar = google.calendar('v3');
+  calendar.events.list({
+    auth: auth,
+    calendarId: 'primary',
+    timeMin: (new Date()).toISOString(),
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime'
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      return;
+    }
+    var events = response.items;
+    if (events.length == 0) {
+      console.log('No upcoming events found.');
+    } else {
+      console.log('Upcoming 10 events:');
+      for (var i = 0; i < events.length; i++) {
+        var event = events[i];
+        var start = event.start.dateTime || event.start.date;
+        console.log('%s - %s', start, event.summary);
+      }
+    }
+  });
+}
+
+
+    function addAllDayEvent(auth) {
+
+      var calendar = google.calendar('v3');
+      var event = {
+          'summary': 'Google I/O 2018',
+          'location': '800 Howard St., San Francisco, CA 94103',
+          'description': 'A chance to hear more about Google\'s developer products.',
+          'start': {
+            'dateTime': '2018-03-28T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': '2018-03-28T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'attendees': [
+            {'email': 'lpage@example.com'},
+            {'email': 'sbrin@example.com'}
+          ],
+          'reminders': {
+            'useDefault': true
+          }
+        };
+
+        calendar.events.insert({
+              auth: auth,
+              calendarId: 'primary',
+              resource: event,
+            }, function(err, event) {
+              if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+              }
+              console.log('Event created: %s', event.htmlLink);
+            });
+
+  }
 }

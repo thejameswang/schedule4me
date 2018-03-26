@@ -107,6 +107,7 @@ function storeToken(token) {
  */
 function listEvents(auth) {
   var calendar = google.calendar('v3');
+
   calendar.events.list({
     auth: auth,
     calendarId: 'primary',
@@ -132,7 +133,6 @@ function listEvents(auth) {
     }
   });
 }
-
 
 
 //initializes express

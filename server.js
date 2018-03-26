@@ -3,6 +3,19 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import Calendar from './models/Calendar';
+import Bot from 'slackbots'
+
+let settings = {
+  token: process.env.ST
+  name: 'schedule4me'
+}
+
+let bot = new Bot(settings);
+
+bot.on('start', function() {
+  bot.postMessageToChannel('schedule4me','Hello User')
+})
+
 
 //initializes express
 var app = express();

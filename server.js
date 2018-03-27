@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import oauth from './app/oauth';
 import bot from './app/bot';
+import trainer from './app/trainer'
 
 //initializes express
 var app = express();

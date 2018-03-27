@@ -39,7 +39,7 @@ export default function bot() {
         // all ingoing events https://api.slack.com/rtm
 
         if (typeof(data.text) !== "undefined") {
-            trainer(data)
+            let response = trainer(data)
             console.log(data.text);
         }
 

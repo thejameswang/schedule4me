@@ -45,12 +45,12 @@ app.post('/test', function(req, res) {
   console.log(req.body);
   var response = req.body.result && req.body.result.parameters ? req.body.result.parameters.parameters : 'There was an issue';
   // console.log(response)
-  return res.json({
-    response,
-    displayTest: response,
-    source: 'schedule4me',
-    sessionId: 'schedule4me'
-  })
+  // return res.json({
+  //   response,
+  //   displayTest: response,
+  //   source: 'schedule4me',
+  //   sessionId: 'schedule4me'
+  // })
 })
 
 

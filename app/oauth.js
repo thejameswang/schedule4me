@@ -1,8 +1,8 @@
 import fs from 'fs';
-import google from 'googleapis';
+import { google } from 'googleapis';
 import readline from 'readline';
 import Calendar from '../models/Calendar';
-import googleAuth from 'google-auth-library';
+// import googleAuth from 'google-auth-library';
 
 
 export default function oauth(app) {
@@ -38,8 +38,7 @@ export default function oauth(app) {
       var clientSecret = credentials.installed.client_secret;
       var clientId = credentials.installed.client_id;
       var redirectUrl = credentials.installed.redirect_uris[0];
-      var auth = new googleAuth();
-      var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+      var oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUrl);
       // Check if we have previously stored a token.
       fs.readFile(TOKEN_PATH, function(err, token) {
         if (err) {
@@ -155,7 +154,7 @@ function listEvents(auth) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
               }
-              console.log('Event created: %s', event.htmlLink);
+              console.log('Event created: %s', event.data.htmlLink);
             });
 
   }

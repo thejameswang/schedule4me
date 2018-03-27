@@ -43,13 +43,13 @@ app.get('/', function(req, res) {
 
 app.post('/test', function(req, res) {
   console.log(req.body);
-  // var response = req.body.result && req.body.result.parameters && req.body.result.parameters.scheduling ? req.body.result.parameters.echoText : 'There was an issue';
+  var response = req.body.result && req.body.result.parameters ? req.body.result.parameters.parameters : 'There was an issue';
   // console.log(response)
-  // return res.json({
-  //   response,
-  //   displayTest: response,
-  //   source: 'schedule4me'
-  // })
+  return res.json({
+    response,
+    displayTest: response,
+    source: 'schedule4me'
+  })
 })
 
 

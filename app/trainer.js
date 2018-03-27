@@ -12,9 +12,9 @@ export default function trainer(event) {
     });
 
     request.on('response', function(response) {
-        console.log(response);
+        console.log(response, 'given response that comes back');
         let aiText = response.result.fulfillment.speech;
-        console.log(aiText)
+        // console.log(aiText)
     });
 
     request.on('error', function(error) {

@@ -48,7 +48,8 @@ app.post('/test', function(req, res) {
   return res.json({
     response,
     displayTest: response,
-    source: 'schedule4me'
+    source: 'schedule4me',
+    sessionId: 'schedule4me'
   })
 })
 

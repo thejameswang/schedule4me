@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import oauth from './app/oauth';
 import bot from './app/bot';
+import trainer from './app/trainer'
 
 //initializes express
 var app = express();
@@ -18,8 +19,6 @@ mongoose.connect(process.env.MONGODB_URI);
 //initializes database routes, connection checks, and connection functions
 oauth(app);
 bot();
-// trainer(app);
-
 
 //Checks for mongo database environmental variables
 if (!process.env.MONGODB_URI) {
@@ -41,6 +40,18 @@ app.get('/', function(req, res) {
         res.redirect('/login')
     }
 });
+
+app.post('/test', function(req, res) {
+  console.log(req.body);
+  var response = req.body.result && req.body.result.parameters ? req.body.result.parameters.parameters : 'There was an issue';
+  // console.log(response)
+  return res.json({
+    response,
+    displayTest: response,
+    source: 'schedule4me',
+    sessionId: 'schedule4me'
+  })
+})
 
 
 console.log('Express started. Listening on port', process.env.PORT || 3000);

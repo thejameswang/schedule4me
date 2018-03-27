@@ -19,8 +19,6 @@ mongoose.connect(process.env.MONGODB_URI);
 //initializes database routes, connection checks, and connection functions
 oauth(app);
 bot();
-trainer(app);
-
 
 //Checks for mongo database environmental variables
 if (!process.env.MONGODB_URI) {
@@ -42,6 +40,17 @@ app.get('/', function(req, res) {
         res.redirect('/login')
     }
 });
+
+app.post('/test', function(req, res) {
+  console.log(req.body);
+  var response = req.body.result && req.body.result.parameters && req.body.result.parameters.scheduling ? req.body.result.parameters.echoText : 'There was an issue';
+  // console.log(response)
+  return res.json({
+    response,
+    displayTest: response,
+    source: 'schedule4me'
+  })
+})
 
 
 console.log('Express started. Listening on port', process.env.PORT || 3000);

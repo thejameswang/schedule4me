@@ -1,4 +1,5 @@
 'use strict';
+import trainer from './trainer'
 
 let SlackBot = require('slackbots');
 
@@ -38,6 +39,7 @@ export default function bot() {
         // all ingoing events https://api.slack.com/rtm
 
         if (typeof(data.text) !== "undefined") {
+            trainer(data)
             console.log(data.text);
         }
 

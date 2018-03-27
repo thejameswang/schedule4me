@@ -12,20 +12,21 @@ export default function trainer(event) {
         sessionId: 'schedule4me'
     });
 
-    request.query = message;
-    byte_response = request.getresponse().read()
-    json_response = byte_response.decode('utf8').replace("'", '"')
-    response = json.loads(json_response)
-    console.log(response)
-    // request.on('response', function(response) {
-    //     console.log(response, 'given response that comes back');
-    //     let aiText = response.result.fulfillment.speech;
-    //     // console.log(aiText)
-    // });
-    //
-    // request.on('error', function(error) {
-    //     console.log(error);
-    // });
+    // request.query = message;
+    // byte_response = request.getresponse().read()
+    // json_response = byte_response.decode('utf8').replace("'", '"')
+    // response = json.loads(json_response)
+    // console.log(response)
 
-    // request.end();
+    request.on('response', function(response) {
+        console.log(response, 'given response that comes back');
+        let aiText = response.result.fulfillment.speech;
+        // console.log(aiText)
+    });
+
+    request.on('error', function(error) {
+        console.log(error);
+    });
+
+    request.end();
 }

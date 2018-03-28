@@ -5,7 +5,7 @@ var apiaiapp = apiai(process.env.APIAI_TOKEN);
 export default function trainer(event) {
     let sender = event.user;
     let message = event.text;
-    console.log(sender, 'sendign')
+    console.log(sender, 'sending')
     console.log(event.text, 'text')
 
     let request = apiaiapp.textRequest(message, {
@@ -20,9 +20,9 @@ export default function trainer(event) {
 
     request.on('response', function(response) {
         // console.log(response, 'given response that comes back');
-
-        let aiText = response.result.fulfillment.speech;
-        console.log(aiText)
+        response.user = sender;
+        // let aiText = response.result.fulfillment.speech;
+        // console.log(aiText)
         console.log(response)
         return response
     });

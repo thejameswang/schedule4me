@@ -16,10 +16,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 //connects mongo server using personal database login from environmental source
 mongoose.connect(process.env.MONGODB_URI);
 
-//initializes database routes, connection checks, and connection functions
-oauth(app);
-bot();
-
 //Checks for mongo database environmental variables
 if (!process.env.MONGODB_URI) {
     throw new Error("MONGODB_URI is not in the environmental variables. Try running 'source env.sh'");
@@ -33,6 +29,9 @@ mongoose.connection.on('error', function() {
     process.exit(1);
 });
 
+//initializes database routes, connection checks, and connection functions
+bot(app);
+
 app.get('/', function(req, res) {
     if (req.user) {
         res.json()
@@ -44,7 +43,6 @@ app.get('/', function(req, res) {
 app.post('/test', function(req, res) {
   console.log(req.body);
   var response = req.body.result && req.body.result.parameters ? req.body.result.parameters.parameters : 'There was an issue';
-  // console.log(response)
   return res.json({
     response,
     displayTest: response,

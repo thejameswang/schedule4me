@@ -45,14 +45,52 @@ export default function bot(app) {
                 console.log('Message send by bot, ignoring');
                 return;
             }
-            let url = "https://slack.com/api/users.profile.get?" + "token=xoxp-335755701217-337133111606-335741401984-4446b6991406e72e8ab7ae8d460570d4" + "&user=" + data.user;
+            let url = "https://slack.com/api/users.profile.get?" + `token=${process.env.SLACK_OAUTH}`+ "&user=" + data.user;
             trainer(data).then(function(dialogresponse) {
                 axios.get(url).then(function(response) {
+                    // console.log('Does it get here')
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
-                        bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
-
+                        // bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
+                        axios.post('https://slack.com/api/chat.postMessage',{
+                          params: {
+                            token: process.env.SLACK_OAUTH,
+                            channel: data.channel,
+                            text:'Checking if this works',
+                            "attachments": [
+                                {
+                                  "fallback": "Required plain-text summary of the attachment.",
+                                  "color": "#2eb886",
+                                  "pretext": "Optional text that appears above the attachment block",
+                                  "author_name": "Bobby Tables",
+                                  "author_link": "http://flickr.com/bobby/",
+                                  "author_icon": "http://flickr.com/icons/bobby.jpg",
+                                  "title": "Slack API Documentation",
+                                  "title_link": "https://api.slack.com/",
+                                  "text": "Optional text that appears within the attachment",
+                                  "fields": [
+                                      {
+                                          "title": "Priority",
+                                          "value": "High",
+                                          "short": false
+                                      }
+                                  ],
+                                  "image_url": "http://my-website.com/path/to/image.jpg",
+                                  "thumb_url": "http://example.com/path/to/thumb.png",
+                                  "footer": "Slack API",
+                                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                                  "ts": 123456789
+                                }
+                            ],
+                          icon_emoji: ':cat:'
+                          }
+                        }).then(resp => {
+                          console.log(resp)
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
                         let newEvent = new Event({
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,
@@ -63,14 +101,14 @@ export default function bot(app) {
                             description: dialogresponse.result.resolvedQuery
                         });
 
-                        newEvent.save(function(error, event) {
-                            if (error) {
-                                return console.error(error);
-                            } else {
-                                console.log("SUCCESS!");
-                                oauth(app, event);
-                            }
-                        });
+                        // newEvent.save(function(error, event) {
+                        //     if (error) {
+                        //         return console.error(error);
+                        //     } else {
+                        //         console.log("SUCCESS!");
+                        //         oauth(app, event);
+                        //     }
+                        // });
                     }
                 }).catch(function(error) {
                     console.log(error);

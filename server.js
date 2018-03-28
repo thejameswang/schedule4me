@@ -53,6 +53,10 @@ app.post('/test', function(req, res) {
 
 app.post('/response', function(req, res) {
   console.log(req.body);
+  return res.json({
+    ok: true,
+    response: req.body
+  })
   // var response =
   // return res.json({
   //   response,

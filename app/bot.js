@@ -62,7 +62,7 @@ export default function bot(app) {
                             invitee_emails: response.data.profile.email,
                             description: dialogresponse.result.resolvedQuery
                         });
-                        
+
                         newEvent.save(function(error, event) {
                             if (error) {
                                 return console.error(error);

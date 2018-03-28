@@ -13,7 +13,7 @@ import User from '../models/User';
 
 export default function oauth(app, event) {
     let eventNew = event;
-    
+
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
     var SCOPES = ['https://www.googleapis.com/auth/calendar'];
@@ -121,11 +121,7 @@ export default function oauth(app, event) {
             'reminders': {
                 'useDefault': true
             },
-            'attendees': [
-                {
-                    'email': eventNew.email
-                }
-            ]
+            'attendees':  eventNew.email
         };
 
         calendar.events.insert({

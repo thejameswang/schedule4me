@@ -5,18 +5,14 @@ let connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 const eventSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    attendees: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }]
+    event_name: String,
+    full_name: String,
+    email: String,
+    location: String,
+    start: Date,
+    end: Date,
+    invitee_emails: Array,
+    description: String
 });
 
 const Event = mongoose.model('Event', eventSchema);

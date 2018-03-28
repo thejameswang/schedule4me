@@ -4,7 +4,7 @@ import readline from 'readline';
 import Event from '../models/Event';
 import User from '../models/User';
 
-export default function oauth(app) {
+export default function oauth(app, event) {
 
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -20,7 +20,7 @@ export default function oauth(app) {
         }
         // Authorize a client with the loaded credentials, then call the
         // Google Calendar API.
-        // authorize(JSON.parse(content), addAllDayEvent);
+        authorize(JSON.parse(content), addAllDayEvent);
 
     });
 
@@ -114,27 +114,21 @@ export default function oauth(app) {
 
         var calendar = google.calendar('v3');
         var event = {
-            'summary': 'Google',
-            'location': '800 Howard St., San Francisco, CA 94103',
-            'description': 'A chance to hear more about Google\'s developer products.',
+            'summary': event.event__name,
+            'location': event.location,
+            'description': event.description,
             'start': {
-                'date': '2018-03-28',
+                'date': event.start,
                 'timeZone': 'America/Los_Angeles'
             },
-            'end': {
-                'date': '2018-03-29',
-                'timeZone': 'America/Los_Angeles'
-            },
-            'attendees': [
-                {
-                    'email': 'lpage@example.com'
-                }, {
-                    'email': 'sbrin@example.com'
-                }
-            ],
             'reminders': {
                 'useDefault': true
-            }
+            },
+            'attendees': [
+               {
+                   'email': event.email
+               }
+           ]
         };
 
         calendar.events.insert({

@@ -13,11 +13,13 @@ import User from '../models/User';
 
 export default function oauth(app, event) {
     let eventNew = event;
+    
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
     var SCOPES = ['https://www.googleapis.com/auth/calendar'];
     var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/';
     var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
+
     // Load client secrets from a local file
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.

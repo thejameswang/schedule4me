@@ -6,34 +6,37 @@ import axios from 'axios';
 
 import trainer from './trainer'
 import oauth from './oauth'
+import addEvent from './addEvent'
 
 import Event from '../models/Event';
 import User from '../models/User';
 
+
 export default function bot(app) {
     let bot = new SlackBot({token: process.env.SLACKBOT_OAUTH_TOKEN, name: 'ScheduleRightMeow'});
-
+    let oauth;
     // bot.run();
     //
-    // bot.on('start', function() {
-    //      more information about additional params https://api.slack.com/methods/chat.postMessage
-    //         var params = {
-    //             icon_emoji: ':cat:'
-    //         };
-    //
-    //          define channel, where bot exist. You can adjust it there https://my.slack.com/services
-    //         bot.postMessageToChannel('general', 'meow!', params);
-    //
-    //          define existing username instead of 'user_name'
-    //         bot.postMessageToUser('user_name', 'meow!', params);
-    //
-    //          If you add a 'slackbot' property,
-    //          you will post to another user's slackbot channel instead of a direct message
-    //         bot.postMessageToUser('user_name', 'meow!', { 'slackbot': true, icon_emoji: ':cat:' });
-    //
-    //          define private group instead of 'private_group', where bot exist
-    //         bot.postMessageToGroup('private_group', 'meow!', params);
-    // });
+    bot.on('start', function() {
+        oauth = oauth();
+        //  more information about additional params https://api.slack.com/methods/chat.postMessage
+        //     var params = {
+        //         icon_emoji: ':cat:'
+        //     };
+         //
+        //      define channel, where bot exist. You can adjust it there https://my.slack.com/services
+        //     bot.postMessageToChannel('general', 'meow!', params);
+         //
+        //      define existing username instead of 'user_name'
+        //     bot.postMessageToUser('user_name', 'meow!', params);
+         //
+        //      If you add a 'slackbot' property,
+        //      you will post to another user's slackbot channel instead of a direct message
+        //     bot.postMessageToUser('user_name', 'meow!', { 'slackbot': true, icon_emoji: ':cat:' });
+         //
+        //      define private group instead of 'private_group', where bot exist
+        //     bot.postMessageToGroup('private_group', 'meow!', params);
+    });
 
     /**
      * @param {object} data
@@ -77,7 +80,7 @@ export default function bot(app) {
                                 return console.error(error);
                             } else {
                                 console.log("SUCCESS!");
-                                oauth(app, event);
+                                addEvent(event, oauth)
                             }
                         });
                     }

@@ -47,6 +47,17 @@ export default function bot(app) {
             }
             let url = "https://slack.com/api/users.profile.get?" + "token=xoxp-335755701217-337133111606-335741401984-4446b6991406e72e8ab7ae8d460570d4" + "&user=" + data.user;
             trainer(data).then(function(dialogresponse) {
+                let emails = [];
+                let names = dialogresponse.result.parameters['given-name'];
+                for(let i = 0; i < names.length; i++) {
+                    console.log(names[i]);
+                    axios.get("https://slack.com/api/users.profile.get?" + "token=xoxp-335755701217-337133111606-335741401984-4446b6991406e72e8ab7ae8d460570d4" + "&user=" + names[i]).then(function(response) {
+                        console.log(response);
+                        // emails.push(response.data.profile.email);
+                        console.log("invitees: " + emails);
+                    });
+                }
+
                 axios.get(url).then(function(response) {
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
@@ -57,9 +68,9 @@ export default function bot(app) {
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,
                             email: response.data.profile.email,
-                            location: dialogresponse.result.parameters.location,
+                            location: dialogresponse.result.parameters.location.toString(),
                             start: dialogresponse.result.parameters.date ? new Date(dialogresponse.result.parameters.date + "T" + dialogresponse.result.parameters.time) : new Date(),
-                            invitee_emails: response.data.profile.email,
+                            invitee_emails: emails,
                             description: dialogresponse.result.resolvedQuery
                         });
 

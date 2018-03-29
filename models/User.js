@@ -6,10 +6,17 @@ mongoose.connect(connect);
 
 const userSchema = new mongoose.Schema({
     email: {
+        type: String
+    },
+    real_name: {
         type: String,
         required: true
     },
-    full_name: {
+    name: {
+        type: String,
+        required: true
+    },
+    slack_id: {
         type: String,
         required: true
     }

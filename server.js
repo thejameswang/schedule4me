@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import oauth from './app/oauth';
 import bot from './app/bot';
 import trainer from './app/trainer'
+import users from './app/users'
 
 //initializes express
 var app = express();
@@ -30,7 +31,7 @@ mongoose.connection.on('error', function() {
 });
 
 //initializes database routes, connection checks, and connection functions
-bot(app);
+// bot(app);
 
 app.get('/', function(req, res) {
     if (req.user) {
@@ -52,5 +53,8 @@ app.post('/test', function(req, res) {
 })
 
 
+
 console.log('Express started. Listening on port', process.env.PORT || 3000);
 app.listen(process.env.PORT || 3000);
+
+users();

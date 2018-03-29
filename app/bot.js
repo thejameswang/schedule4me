@@ -8,9 +8,10 @@ import trainer from './trainer'
 import oauth from './oauth'
 
 import Event from '../models/Event';
+import User from '../models/User';
 
 export default function bot(app) {
-    let bot = new SlackBot({token: process.env.SLACKBOT_OAUTH_TOKEN, name: 'schedule4me'});
+    let bot = new SlackBot({token: process.env.SLACKBOT_OAUTH_TOKEN, name: 'ScheduleRightMeow'});
 
     // bot.run();
     //
@@ -47,11 +48,21 @@ export default function bot(app) {
             }
             let url = "https://slack.com/api/users.profile.get?" + `token=${process.env.SLACK_OAUTH}`+ "&user=" + data.user;
             trainer(data).then(function(dialogresponse) {
+                let emails = [];
+                let names = dialogresponse.result.parameters['given-name'];
+                for(let i=0; i < names.length; i++) {
+                    User.findOne({name: names[i].toLowerCase()}).then(function(user) {
+                        emails.push({'email': user.email});
+                    }).catch(function(error) {
+                        console.log(error);
+                    });
+                }
                 axios.get(url).then(function(response) {
                     // console.log('Does it get here')
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
+<<<<<<< HEAD
                         // bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
                         axios.get('https://slack.com/api/chat.postMessage',{
                           params: {
@@ -116,13 +127,16 @@ export default function bot(app) {
                         .catch(err => {
                           console.log(err)
                         })
+=======
+                        bot.postMessage(data.channel, `I have scheduled your ${dialogresponse.result.parameters.Description} for ${dialogresponse.result.parameters.date ? new Date(dialogresponse.result.parameters.date + "T" + dialogresponse.result.parameters.time) : new Date()}!`, {icon_emoji: ':cat:'});
+>>>>>>> 8d8cb9b07b4dd53f031a2a85f17f8eec3b826d7a
                         let newEvent = new Event({
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,
                             email: response.data.profile.email,
-                            location: dialogresponse.result.parameters.location,
+                            location: dialogresponse.result.parameters.location.toString(),
                             start: dialogresponse.result.parameters.date ? new Date(dialogresponse.result.parameters.date + "T" + dialogresponse.result.parameters.time) : new Date(),
-                            invitee_emails: response.data.profile.email,
+                            invitee_emails: emails,
                             description: dialogresponse.result.resolvedQuery
                         });
 

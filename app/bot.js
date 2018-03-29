@@ -53,12 +53,12 @@ export default function bot(app) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
                         // bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
-                        axios.post('https://slack.com/api/chat.postMessage',{
+                        axios.get('https://slack.com/api/chat.postMessage',{
                           params: {
-                            token: process.env.SLACK_OAUTH,
+                            token: process.env.SLACKBOT_OAUTH_TOKEN,
                             channel: data.channel,
                             text:'Checking if this works',
-                            "attachments": [
+                            "attachments": JSON.stringify([
                                 {
                                   "fallback": "Required plain-text summary of the attachment.",
                                   "color": "#2eb886",
@@ -69,20 +69,45 @@ export default function bot(app) {
                                   "title": "Slack API Documentation",
                                   "title_link": "https://api.slack.com/",
                                   "text": "Optional text that appears within the attachment",
-                                  "fields": [
+                                  "callback_id": "game_selection",
+                                  "actions": [
                                       {
-                                          "title": "Priority",
-                                          "value": "High",
-                                          "short": false
-                                      }
-                                  ],
-                                  "image_url": "http://my-website.com/path/to/image.jpg",
-                                  "thumb_url": "http://example.com/path/to/thumb.png",
-                                  "footer": "Slack API",
-                                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                                  "ts": 123456789
+                                          "name": "games_list",
+                                          "text": "Pick a game...",
+                                          "type": "select",
+                                          "options": [
+                                              {
+                                                  "text": "Hearts",
+                                                  "value": "hearts"
+                                              },
+                                              {
+                                                  "text": "Bridge",
+                                                  "value": "bridge"
+                                              },
+                                              {
+                                                  "text": "Checkers",
+                                                  "value": "checkers"
+                                              },
+                                              {
+                                                  "text": "Chess",
+                                                  "value": "chess"
+                                              },
+                                              {
+                                                  "text": "Poker",
+                                                  "value": "poker"
+                                              },
+                                              {
+                                                  "text": "Falken's Maze",
+                                                  "value": "maze"
+                                              },
+                                              {
+                                                  "text": "Global Thermonuclear War",
+                                                  "value": "war"
+                                              }
+                                        ]
                                 }
-                            ],
+                            ]
+                          }]),
                           icon_emoji: ':cat:'
                           }
                         }).then(resp => {

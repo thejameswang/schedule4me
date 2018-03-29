@@ -12,13 +12,20 @@ import Event from '../models/Event';
 import User from '../models/User';
 
 
+
 export default function bot(app) {
     let bot = new SlackBot({token: process.env.SLACKBOT_OAUTH_TOKEN, name: 'ScheduleRightMeow'});
-    let oauth;
+    let oauthCheck;
     // bot.run();
     //
-    bot.on('start', function() {
-        oauth = oauth();
+    bot.on('start', function(data) {
+        let botInfo = JSON.stringify(bot);
+        botInfo = JSON.parse(botInfo);
+        // console.log(botInfo);
+        // console.log(JSON.parse(bot.id));
+        // let channelName = bot.getChannelId('ScheduleRightMeow')
+        console.log(data);
+        oauthCheck = oauth(botInfo.self.id);
         //  more information about additional params https://api.slack.com/methods/chat.postMessage
         //     var params = {
         //         icon_emoji: ':cat:'
@@ -144,7 +151,7 @@ export default function bot(app) {
                                 return console.error(error);
                             } else {
                                 console.log("SUCCESS!");
-                                addEvent(event, oauth)
+                                addEvent(event, oauthCheck)
                             }
                         });
                     }

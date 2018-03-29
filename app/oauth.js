@@ -1,5 +1,6 @@
 import fs from 'fs';
 import {google} from 'googleapis';
+import axios from 'axios'
 const OAuth2Client = google.auth.OAuth2;
 const credentials = JSON.parse(fs.readFileSync('./client_secret.json'));
 var clientSecret = credentials.installed.client_secret;
@@ -11,7 +12,7 @@ import readline from 'readline';
 import Event from '../models/Event';
 import User from '../models/User';
 
-export default function oauth() {
+export default function oauth(botId) {
 
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -22,28 +23,37 @@ export default function oauth() {
     // Load client secrets from a local file
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
-    authorize(addAllDayEvent);
+    authorize();
     /**
      * Create an OAuth2 client with the given credentials, and then execute the
      * given callback function.
      *
      * @param {function} callback The callback to call with the authorized client.
      */
-    function authorize(callback) {
+    function authorize() {
 
         // Check if we have previously stored a token.
         fs.readFile(TOKEN_PATH, function(err, token) {
             if (err) {
-                getNewToken(callback);
+                getNewToken();
             } else {
                 oauth2Client.setCredentials(JSON.parse(token))
-                callback();
+
             }
         });
     }
 
-    function getNewToken(callback) {
+    function getNewToken() {
+        console.log("BOT ID:" + botId);
         var authUrl = oauth2Client.generateAuthUrl({access_type: 'offline', scope: SCOPES});
+        axios.get('https://slack.com/api/chat.postMessage', {
+            params: {
+                token: process.env.SLACKBOT_OAUTH_TOKEN,
+                channel: botId,
+                text: `Please authorize your account with this URL ${authUrl}`,
+                icon_emoji: ':cat:'
+            }
+        })
         console.log('Authorize this app by visiting this url: ', authUrl);
         var rl = readline.createInterface({input: process.stdin, output: process.stdout});
         rl.question('Enter the code from that page here: ', function(code) {
@@ -55,7 +65,6 @@ export default function oauth() {
                 }
                 oauth2Client.setCredentials(token)
                 storeToken(token);
-                callback();
             });
         });
     }
@@ -75,7 +84,6 @@ export default function oauth() {
         console.log('Token stored to ' + TOKEN_PATH);
     }
 
-
-return oauth2Client;
+    return oauth2Client;
 
 }

@@ -15,25 +15,27 @@ export default function bot(app) {
 
     // bot.run();
     //
-    // bot.on('start', function() {
-    //      more information about additional params https://api.slack.com/methods/chat.postMessage
-    //         var params = {
-    //             icon_emoji: ':cat:'
-    //         };
-    //
-    //          define channel, where bot exist. You can adjust it there https://my.slack.com/services
-    //         bot.postMessageToChannel('general', 'meow!', params);
-    //
-    //          define existing username instead of 'user_name'
-    //         bot.postMessageToUser('user_name', 'meow!', params);
-    //
-    //          If you add a 'slackbot' property,
-    //          you will post to another user's slackbot channel instead of a direct message
-    //         bot.postMessageToUser('user_name', 'meow!', { 'slackbot': true, icon_emoji: ':cat:' });
-    //
-    //          define private group instead of 'private_group', where bot exist
-    //         bot.postMessageToGroup('private_group', 'meow!', params);
-    // });
+    bot.on('start', function() {
+      let newBot = JSON.stringify(bot)
+      console.log(bot.getImChannels()._value.ims)
+         // more information about additional params https://api.slack.com/methods/chat.postMessage
+         //    var params = {
+         //        icon_emoji: ':cat:'
+         //    };
+         //
+         //     define channel, where bot exist. You can adjust it there https://my.slack.com/services
+         //    bot.postMessageToChannel('general', 'meow!', params);
+         //
+         //     define existing username instead of 'user_name'
+         //    bot.postMessageToUser('user_name', 'meow!', params);
+         //
+         //     If you add a 'slackbot' property,
+         //     you will post to another user's slackbot channel instead of a direct message
+         //    bot.postMessageToUser('user_name', 'meow!', { 'slackbot': true, icon_emoji: ':cat:' });
+         //
+         //     define private group instead of 'private_group', where bot exist
+         //    bot.postMessageToGroup('private_group', 'meow!', params);
+    });
 
     /**
      * @param {object} data
@@ -46,6 +48,7 @@ export default function bot(app) {
                 console.log('Message send by bot, ignoring');
                 return;
             }
+            console.log(data)
             let url = "https://slack.com/api/users.profile.get?" + `token=${process.env.SLACK_OAUTH}`+ "&user=" + data.user;
             trainer(data).then(function(dialogresponse) {
                 let emails = [];
@@ -62,7 +65,7 @@ export default function bot(app) {
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
-<<<<<<< HEAD
+                        console.log(data.channel)
                         // bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
                         axios.get('https://slack.com/api/chat.postMessage',{
                           params: {
@@ -122,14 +125,11 @@ export default function bot(app) {
                           icon_emoji: ':cat:'
                           }
                         }).then(resp => {
-                          console.log(resp)
+                          // console.log(resp)
                         })
                         .catch(err => {
                           console.log(err)
                         })
-=======
-                        bot.postMessage(data.channel, `I have scheduled your ${dialogresponse.result.parameters.Description} for ${dialogresponse.result.parameters.date ? new Date(dialogresponse.result.parameters.date + "T" + dialogresponse.result.parameters.time) : new Date()}!`, {icon_emoji: ':cat:'});
->>>>>>> 8d8cb9b07b4dd53f031a2a85f17f8eec3b826d7a
                         let newEvent = new Event({
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,

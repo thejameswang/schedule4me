@@ -105,6 +105,7 @@ export default function oauth(app, event) {
     // }
 
     function addAllDayEvent() {
+        console.log(eventNew.invitee_emails);
         let calendar = google.calendar('v3');
         let newEvent = {
             'summary': eventNew.event_name,
@@ -121,7 +122,7 @@ export default function oauth(app, event) {
             'reminders': {
                 'useDefault': true
             },
-            'attendees':  eventNew.email
+            'attendees':  eventNew.invitee_emails
         };
 
         calendar.events.insert({

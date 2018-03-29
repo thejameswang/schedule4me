@@ -8,6 +8,7 @@ import trainer from './trainer'
 import oauth from './oauth'
 
 import Event from '../models/Event';
+import User from '../models/User';
 
 export default function bot(app) {
     let bot = new SlackBot({token: process.env.SLACKBOT_OAUTH_TOKEN, name: 'schedule4me'});
@@ -49,21 +50,18 @@ export default function bot(app) {
             trainer(data).then(function(dialogresponse) {
                 let emails = [];
                 let names = dialogresponse.result.parameters['given-name'];
-                for(let i = 0; i < names.length; i++) {
-                    console.log(names[i]);
-                    axios.get("https://slack.com/api/users.profile.get?" + "token=xoxp-335755701217-337133111606-335741401984-4446b6991406e72e8ab7ae8d460570d4" + "&user=" + names[i]).then(function(response) {
-                        console.log(response);
-                        // emails.push(response.data.profile.email);
-                        console.log("invitees: " + emails);
+                for(let i=0; i < names.length; i++) {
+                    User.findOne({name: names[i].toLowerCase()}).then(function(user) {
+                        emails.push({'email': user.email});
+                    }).catch(function(error) {
+                        console.log(error);
                     });
                 }
-
                 axios.get(url).then(function(response) {
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
                         bot.postMessage(data.channel, `ACTiON COMPLETE `, {icon_emoji: ':cat:'});
-
                         let newEvent = new Event({
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,

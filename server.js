@@ -30,8 +30,9 @@ mongoose.connection.on('error', function() {
     process.exit(1);
 });
 
+users();
 //initializes database routes, connection checks, and connection functions
-// bot(app);
+bot(app);
 
 app.get('/', function(req, res) {
     if (req.user) {
@@ -56,5 +57,3 @@ app.post('/test', function(req, res) {
 
 console.log('Express started. Listening on port', process.env.PORT || 3000);
 app.listen(process.env.PORT || 3000);
-
-users();

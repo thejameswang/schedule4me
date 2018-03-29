@@ -53,6 +53,21 @@ app.post('/test', function(req, res) {
   })
 })
 
+app.post('/response', function(req, res) {
+  console.log(req.body);
+  return res.json({
+    ok: true,
+    response: req.body
+  })
+  // var response =
+  // return res.json({
+  //   response,
+  //   displayTest: response,
+  //   source: 'schedule4me',
+  //   sessionId: 'schedule4me'
+  // })
+})
+
 
 
 console.log('Express started. Listening on port', process.env.PORT || 3000);

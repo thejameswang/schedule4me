@@ -127,8 +127,9 @@ export default function bot(app) {
                             if (error) {
                                 return console.error(error);
                             } else {
-                                let nearEvents = getEvents(oauthCheck);
                                 addEvent(event, oauthCheck);
+                                let nearEvents = getEvents(oauthCheck);
+                                findConflicts(nearEvents, event);
                             }
                         });
                     }

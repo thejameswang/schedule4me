@@ -11,8 +11,9 @@ var oauth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
 import readline from 'readline';
 import Event from '../models/Event';
 import User from '../models/User';
+let count = 0;
 
-export default function oauth(botId) {
+export default function oauth(bot ,botId, text, user) {
 
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -23,67 +24,89 @@ export default function oauth(botId) {
     // Load client secrets from a local file
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
-    authorize();
+    return new Promise((resolve, reject) =>{
+      authorize();
     /**
      * Create an OAuth2 client with the given credentials, and then execute the
      * given callback function.
      *
      * @param {function} callback The callback to call with the authorized client.
      */
-    function authorize() {
+      function authorize() {
 
-        // Check if we have previously stored a token.
-        fs.readFile(TOKEN_PATH, function(err, token) {
-            if (err) {
-                getNewToken();
-            } else {
-                oauth2Client.setCredentials(JSON.parse(token))
+          // Check if we have previously stored a token.
+          fs.readFile(TOKEN_PATH, function(err, token) {
+              if (err) {
+                  console.log('This errored in auth')
+                  getNewToken();
+              } else {
+                  // console.log('Does it get here')
+                  oauth2Client.setCredentials(JSON.parse(token))
+                  // console.log(oauth2Client, 'DOES THIS OWRK')
+                  resolve(oauth2Client);
+              }
+          });
+      }
 
+      function getNewToken() {
+          console.log("BOT ID:" + botId);
+          var authUrl = oauth2Client.generateAuthUrl({access_type: 'offline', scope: SCOPES});
+
+          if(count === 0) {
+            axios.get('https://slack.com/api/chat.postMessage', {
+                params: {
+                    token: process.env.SLACKBOT_OAUTH_TOKEN,
+                    channel: botId,
+                    text: `Please authorize your account with this URL ${authUrl}`,
+                    icon_emoji: ':cat:'
+                }
+            })
+            count++;
+          }
+          if(count=== 1) {
+            if (!user) {
+                console.log('Message send by bot, ignoring');
+                return;
             }
-        });
-    }
-
-    function getNewToken() {
-        console.log("BOT ID:" + botId);
-        var authUrl = oauth2Client.generateAuthUrl({access_type: 'offline', scope: SCOPES});
-        axios.get('https://slack.com/api/chat.postMessage', {
-            params: {
-                token: process.env.SLACKBOT_OAUTH_TOKEN,
-                channel: botId,
-                text: `Please authorize your account with this URL ${authUrl}`,
-                icon_emoji: ':cat:'
-            }
-        })
-        console.log('Authorize this app by visiting this url: ', authUrl);
-        var rl = readline.createInterface({input: process.stdin, output: process.stdout});
-        rl.question('Enter the code from that page here: ', function(code) {
-            rl.close();
-            oauth2Client.getToken(code, function(err, token) {
+            // console.log(text,'did it get here tho')
+            // console.log('Authorize this app by visiting this url: ', authUrl);
+            oauth2Client.getToken(text, function(err, token) {
+                // console.log(text, 'Should be the key')
                 if (err) {
-                    console.log('Error while trying to retrieve access token', err);
+                    console.log('does it work in here')
+                    reject(err)
                     return;
                 }
-                oauth2Client.setCredentials(token)
+                // console.log(oauth2Client, 'PLEASE DOES IT GET HERE')
                 storeToken(token);
+                oauth2Client.setCredentials(token)
+                // rl.close();
+                resolve(oauth2Client);
             });
-        });
-    }
+            // var rl = readline.createInterface({input: process.stdin, output: process.stdout});
+            //
+            // rl.question('Enter the code from that page here: ', function(code) {
+            //     console.log('here')
+            //
+            // });
+          }
+      }
 
-    /**
-     * Store token to disk be used in later program executions.
-     */
-    function storeToken(token) {
-        try {
-            fs.mkdirSync(TOKEN_DIR);
-        } catch (err) {
-            if (err.code != 'EEXIST') {
-                throw err;
-            }
-        }
-        fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-        console.log('Token stored to ' + TOKEN_PATH);
-    }
+      /**
+       * Store token to disk be used in later program executions.
+       */
+      function storeToken(token) {
+          try {
+              console.log(JSON.stringify(token))
+              fs.mkdirSync(TOKEN_DIR);
+          } catch (err) {
+              if (err.code != 'EXIST') {
+                  throw err;
+              }
+          }
+          fs.writeFile(TOKEN_PATH, JSON.stringify(token));
+          console.log('Token stored to ' + TOKEN_PATH);
+      }
 
-    return oauth2Client;
-
+    })
 }

@@ -1,3 +1,5 @@
+import {google} from 'googleapis';
+
 export default function addEvent(eventNew, oauth2Client) {
     console.log(eventNew.invitee_emails);
     let calendar = google.calendar('v3');

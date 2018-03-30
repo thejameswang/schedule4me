@@ -14,7 +14,7 @@ export default function users() {
         let members = JSON.parse(JSON.stringify(response.members));
         for (let i = 0; i < members.length; i++) {
             if (members[i].is_bot === false && members[i].real_name !== "slackbot") {
-                axios.get("https://slack.com/api/users.profile.get?" + "token=xoxp-335755701217-337133111606-335741401984-4446b6991406e72e8ab7ae8d460570d4" + "&user=" + members[i].id).then(function(response) {
+                axios.get("https://slack.com/api/users.profile.get?" + `token=${process.env.SLACK_OAUTH}` + "&user=" + members[i].id).then(function(response) {
                     let newUser = {
                         name: members[i].profile.display_name.toLowerCase(),
                         real_name: members[i].real_name,
@@ -37,7 +37,7 @@ export default function users() {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log(user);
+                            // console.log(user);
                         }
                     });
 

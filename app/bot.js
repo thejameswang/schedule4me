@@ -8,6 +8,7 @@ import trainer from './trainer'
 import oauth from './oauth'
 import addEvent from './addEvent'
 import getEvents from './getEvents'
+import findConflicts from './findConflicts'
 
 import Event from '../models/Event';
 import User from '../models/User';

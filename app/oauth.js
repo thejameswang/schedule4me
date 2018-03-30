@@ -24,7 +24,7 @@ export default function oauth(bot ,botId, text, user) {
     // Load client secrets from a local file
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
-    return new Promise((resolve, reject) =>{
+    return new Promise((resolve, reject) => {
       authorize();
     /**
      * Create an OAuth2 client with the given credentials, and then execute the

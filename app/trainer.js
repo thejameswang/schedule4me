@@ -5,9 +5,6 @@ var apiaiapp = apiai(process.env.APIAI_TOKEN);
 export default function trainer(event) {
     let sender = event.user;
     let message = event.text;
-    console.log(sender, 'sending')
-    console.log(event.text, 'text')
-
 
     return new Promise(function(resolve, reject) {
         let respondingWith;

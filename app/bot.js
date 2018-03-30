@@ -23,19 +23,15 @@ export default function bot(app) {
     });
 
     bot.on('message', async function(data) {
-
         //Beginning Authentication
         if(data.channel && count === 0) {
           if(typeof(oauthCheck) !== 'undefined') {
-            console.log('hello')
             count++;
           }
           oauthCheck = await oauth(bot, data.channel, data.text, data.user);
-          console.log(oauthCheck, 'After the check')
           if(typeof(oauthCheck) === 'undefined' && typeof(data.text) !=='undefined') {
             oauthCheck = await oauth(bot, data.channel, data.text, data.user, function() {
             });
-            //
           }
         }
 
@@ -55,15 +51,20 @@ export default function bot(app) {
                         console.log(error);
                     });
                 }
-                axios.get(url).then(function(response) {
+                axios.get(url).then(async function(response) {
                     if (dialogresponse.result.actionIncomplete) {
                         bot.postMessage(data.channel, `${dialogresponse.result.fulfillment.speech}`, {icon_emoji: ':cat:'});
                     } else {
+                        // console.log(typeof(getEvents(oauthCheck)), 'type of getEvents')
+                        // console.log(getEvents(oauthCheck), 'this is it')
+                        // if(dialogresponse.result.parameters.date) {
+                        //   console.log(typeof(getEvents(oauthCheck)))
+                        // }
                         axios.get('https://slack.com/api/chat.postMessage', {
                             params: {
                                 token: process.env.SLACKBOT_OAUTH_TOKEN,
                                 channel: data.channel,
-                                text: 'Checking if this works',
+                                text: 'There was a conflict',
                                 "attachments": JSON.stringify([
                                     {
                                         "fallback": "Required plain-text summary of the attachment.",
@@ -127,16 +128,17 @@ export default function bot(app) {
                             invitee_emails: emails,
                             description: dialogresponse.result.resolvedQuery
                         });
-
-                        newEvent.save(function(error, event) {
-                            if (error) {
-                                return console.error(error);
-                            } else {
-                                addEvent(event, oauthCheck);
-                                let nearEvents = getEvents(oauthCheck);
-                                findConflicts(nearEvents, event);
-                            }
-                        });
+                        let nearEvents = await getEvents(oauthCheck);
+                        findConflicts(nearEvents, newEvent);
+                        // newEvent.save(function(error, event) {
+                        //     if (error) {
+                        //         return console.error(error);
+                        //     } else {
+                        //         addEvent(event, oauthCheck);
+                        //         let nearEvents = getEvents(oauthCheck);
+                        //         findConflicts(nearEvents, event);
+                        //     }
+                        // });
                     }
                 }).catch(function(error) {
                     console.log(error);

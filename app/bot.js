@@ -24,15 +24,19 @@ export default function bot(app) {
 
     bot.on('message', async function(data) {
 
-        if (data.channel && count === 0) {
-            if (typeof(oauthCheck) !== 'undefined') {
-                count++;
-            }
-            oauthCheck = await oauth(bot, data.channel, data.text, data.user);
-            if (typeof(oauthCheck) === 'undefined' && typeof(data.text) !== 'undefined') {
-
-                oauthCheck = await oauth(bot, data.channel, data.text, data.user, function() {});
-            }
+        //Beginning Authentication
+        if(data.channel && count === 0) {
+          if(typeof(oauthCheck) !== 'undefined') {
+            console.log('hello')
+            count++;
+          }
+          oauthCheck = await oauth(bot, data.channel, data.text, data.user);
+          console.log(oauthCheck, 'After the check')
+          if(typeof(oauthCheck) === 'undefined' && typeof(data.text) !=='undefined') {
+            oauthCheck = await oauth(bot, data.channel, data.text, data.user, function() {
+            });
+            //
+          }
         }
 
         if (typeof(data.text) !== "undefined" && count === 1) {

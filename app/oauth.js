@@ -57,7 +57,7 @@ export default function oauth(bot ,botId, text, user) {
                 params: {
                     token: process.env.SLACKBOT_OAUTH_TOKEN,
                     channel: botId,
-                    text: `Please authorize your account with this URL ${authUrl}`,
+                    text: `Please authorize your account with this URL by sending the authorization code from the link before proceeding. ${authUrl}`,
                     icon_emoji: ':cat:'
                 }
             })
@@ -70,14 +70,16 @@ export default function oauth(bot ,botId, text, user) {
             }
             oauth2Client.getToken(text, function(err, token) {
                 if (err) {
-                    console.log('does it work in here')
+                    bot.postMessage(botId, 'Error while trying to retrieve access token')
                     reject(err)
                     return;
                 }
                 storeToken(token);
                 oauth2Client.setCredentials(token)
+                bot.postMessage(botId, 'Success! You may now make reminders!')
                 resolve(oauth2Client);
             });
+
           }
       }
 
@@ -92,6 +94,10 @@ export default function oauth(bot ,botId, text, user) {
               if (err.code != 'EXIST') {
                   throw err;
               }
+          }
+          if(token === null) {
+            bot.postMessage(botId, 'Error: The access token presented was null')
+            return;
           }
           fs.writeFile(TOKEN_PATH, JSON.stringify(token));
           console.log('Token stored to ' + TOKEN_PATH);

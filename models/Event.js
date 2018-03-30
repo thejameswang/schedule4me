@@ -12,7 +12,8 @@ const eventSchema = new mongoose.Schema({
     start: Date,
     end: Date,
     invitee_emails: Array,
-    description: String
+    description: String,
+    user_name: String
 });
 
 const Event = mongoose.model('Event', eventSchema);

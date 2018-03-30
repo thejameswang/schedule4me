@@ -112,10 +112,12 @@ export default function bot(app) {
                         }).catch(err => {
                             console.log(err);
                         })
+
                         let newEvent = new Event({
                             event_name: dialogresponse.result.parameters.Description,
                             full_name: response.data.profile.real_name,
                             email: response.data.profile.email,
+                            user_name: response.data.profile.display_name,
                             location: dialogresponse.result.parameters.location.toString(),
                             start: dialogresponse.result.parameters.date
                                 ? new Date(dialogresponse.result.parameters.date + "T" + dialogresponse.result.parameters.time)

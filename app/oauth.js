@@ -68,27 +68,16 @@ export default function oauth(bot ,botId, text, user) {
                 console.log('Message send by bot, ignoring');
                 return;
             }
-            // console.log(text,'did it get here tho')
-            // console.log('Authorize this app by visiting this url: ', authUrl);
             oauth2Client.getToken(text, function(err, token) {
-                // console.log(text, 'Should be the key')
                 if (err) {
                     console.log('does it work in here')
                     reject(err)
                     return;
                 }
-                // console.log(oauth2Client, 'PLEASE DOES IT GET HERE')
                 storeToken(token);
                 oauth2Client.setCredentials(token)
-                // rl.close();
                 resolve(oauth2Client);
             });
-            // var rl = readline.createInterface({input: process.stdin, output: process.stdout});
-            //
-            // rl.question('Enter the code from that page here: ', function(code) {
-            //     console.log('here')
-            //
-            // });
           }
       }
 

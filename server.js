@@ -6,6 +6,7 @@ import oauth from './app/oauth';
 import bot from './app/bot';
 import trainer from './app/trainer'
 import users from './app/users'
+import cron from './app/cron'
 
 //initializes express
 var app = express();
@@ -30,6 +31,7 @@ mongoose.connection.on('error', function() {
     process.exit(1);
 });
 
+cron();
 users();
 //initializes database routes, connection checks, and connection functions
 bot(app);

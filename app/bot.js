@@ -39,9 +39,7 @@ export default function bot(app) {
           oauthCheck = await oauth(bot, data.channel, data.text, data.user);
           console.log(oauthCheck, 'After the check')
           if(typeof(oauthCheck) === 'undefined' && typeof(data.text) !=='undefined') {
-
             oauthCheck = await oauth(bot, data.channel, data.text, data.user, function() {
-
             });
             //
           }
